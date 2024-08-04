@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Product
+from .models import Product, Category
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -49,32 +49,18 @@ def signup_user(request):
            messages.success(request, ('مشکلی در ثبت نام شما وجود دارد'))
            return redirect("signup")
     else:
-        return render(request, 'signup.html',{'form':form})
+        return render(request, 'signup.html', {'form': form})
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def product(request,pk):
+def product(request, pk):
     product = Product.objects.get(id=pk)
     return render(request, 'product.html', {'products': product})
+
+def category(request, cat):
+    cat = cat. replace("-", " ")
+    try:
+        category = Category.objects.get(name=cat)
+        products = Product.objects.filter(category=category)
+        return render(request, 'category.html', {'products': product, 'category':category})
+    except:
+        return redirect("home")
