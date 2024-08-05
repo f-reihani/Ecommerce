@@ -60,7 +60,8 @@ def category(request, cat):
     cat = cat. replace("-", " ")
     try:
         category = Category.objects.get(name=cat)
-        products = Product.objects.filter(category=category)
-        return render(request, 'category.html', {'products': product, 'category':category})
+        product = Product.objects.filter(category=category)
+        return render(request, 'category.html', {'products': product, "category": category})
     except:
+        messages.success(request, ('دسته بندی وجود ندارد'))
         return redirect("home")
