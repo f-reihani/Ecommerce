@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load humanize %}
 {% block content %}
-    
+
         <br><br>
         <div class="container">
             <div class="card mb-3">
@@ -13,11 +13,11 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ product.name }}</h5>
                             <p class="card-text">{{ product.description }}</p>
-                            {% if product.is_sale %} 
+                            {% if product.is_sale %}
                             <p class="card-text"> 💰قیمت:<strike>{{ product.price | intcomma }} </strike> - {{ product.sale.price | intcomma }}</p>
                             {% else %}
                             <p class="card-text">💰قیمت:{{ product.price | intcomma }}</p>
-                            {% endif %} 
+                            {% endif %}
                             <br><br>
                             <button class="btn btn-secondary" type="button" value="{{ product.id }}" id="add-cart">اضافه کردن به سبد خرید </button>
                             <a href="{%  url 'home' %}" class="btn btn-secondary">بازکشت به صفحه اصلی </a>
@@ -28,8 +28,8 @@
         </div>
 <br><br><br><br><br><br>
 <script>
-$(document).on('click', '#add-cart', function (e) {
-   e.preventDefult();
+$(document).on('click', '#add-cart', function(e){
+   e.preventDefault();
    $.ajax({
        type: 'POST',
        url: '{% url 'cart_add' %}',
@@ -37,15 +37,16 @@ $(document).on('click', '#add-cart', function (e) {
            product_id: $('#add-cart').val(),
            csrfmiddlewaretoken: '{{ csrf_token }}',
            action: 'post'
-       }, 
-       
-       success: function (json){
-           console.log(json)
        },
-       
+
+       success: function (json){
+           //console.log(json)
+           document.getElementById('cart_quantity').textContent = json.qty
+       },
+
        error: function (xhr, errmsg, err){
        }
   })
 })
-</script>    
+</script>
 {% endblock %}
