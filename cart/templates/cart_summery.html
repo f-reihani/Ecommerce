@@ -30,6 +30,13 @@
                             {% else %}
                             <p class="card-text">💰قیمت:{{ product.price | intcomma }}</p>
                             {% endif %}
+                            <p class="card-text">تعداد:
+                             {% for key, value in quanities.items %}
+                                 {% if key == product.id|slugify %}
+                                     {{ value }}
+                                 {% endif %}
+                             {% endfor %}
+                            </p>
                             <br><br>
                             <a href="{%  url 'home' %}" class="btn btn-secondary">بازکشت به صفحه اصلی </a>
                         </div>
