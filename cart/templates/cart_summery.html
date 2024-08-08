@@ -31,14 +31,23 @@
                             <p class="card-text">💰قیمت:{{ product.price | intcomma }}</p>
                             {% endif %}
                             <p class="card-text">تعداد:
-                             {% for key, value in quanities.items %}
-                                 {% if key == product.id|slugify %}
-                                     {{ value }}
-                                 {% endif %}
-                             {% endfor %}
+                                <select class="form-select" id="select{{ product.id }}">
+                                     {% for key, value in quanities.items %}
+                                        {% if key == product.id|slugify %}
+                                            <option selected>{{ value }}</option>
+                                        {% endif %}
+                                     {% endfor %}
+                                     <option value="1">1</option>
+                                     <option value="2">2</option>
+                                     <option value="3">3</option>
+                                     <option value="3">4</option>
+                                </select>
                             </p>
-                            <br><br>
-                            <a href="{%  url 'home' %}" class="btn btn-secondary">بازکشت به صفحه اصلی </a>
+                            <button type="button" data-index={{product.id}}
+                                    class='btn btn-primary update-cart'> ویرایش</button>
+                            <button type="button" data-index={{product.id}}
+                                    class='btn btn-danger delete-product'> حذف </button>
+                            <a href="{%  url 'home' %}" class="btn btn-primary">بازکشت به صفحه اصلی </a>
                         </div>
                     </div>
                  </div>
@@ -50,4 +59,58 @@
         <center><h3 class="container"> سبد خرید شما خالی است.&#128531;</h3></center>
         {% endif %}
  <br><br><br><br><br><br><br>
+
+<script>
+$(document).on('click', '.update-cart', function(e){
+   e.preventDefault();
+
+   var productid = $(this).data('index')
+   $.ajax({
+       type: 'POST',
+       url: '{% url 'cart_update' %}',
+       data: {
+           product_id: $(this).data('index'),
+           product_qty: $('#select'+productid+' option:selected').text(),
+           csrfmiddlewaretoken: '{{ csrf_token }}',
+           action: 'post'
+       },
+
+       success: function (json){
+           //console.log(json)
+           //document.getElementById('cart_quantity').textContent = json.qty
+           location.reload();
+       },
+
+       error: function (xhr, errmsg, err){
+       }
+  })
+})
+
+$(document).on('click', '.delete-product', function(e){
+   e.preventDefault();
+
+   $.ajax({
+       type: 'POST',
+       url: '{% url 'cart_delete' %}',
+       data: {
+           product_id: $(this).data('index'),
+           csrfmiddlewaretoken: '{{ csrf_token }}',
+           action: 'post'
+       },
+
+       success: function (json){
+           //console.log(json)
+           //document.getElementById('cart_quantity').textContent = json.qty
+           location.reload();
+       },
+
+       error: function (xhr, errmsg, err){
+       }
+  })
+})
+
+
+
+</script>
+
  {% endblock %}

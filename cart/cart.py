@@ -9,6 +9,7 @@ class Cart:
 
         self.cart = cart
     def add(self, product, quantity):
+        print(quantity)
         product_id = str(product.id)
         product_qty = str(quantity)
 
@@ -29,3 +30,176 @@ class Cart:
     def get_quants(self):
         quantities = self.cart
         return quantities
+
+    def update(self, product, quantity):
+        print(quantity)
+        product_id = str(product)
+        print("???????????/")
+        product_qty = int(quantity)
+
+        ourcart = self.cart
+        ourcart[product_id] = product_qty
+        self.session.modified = True
+
+        alaki = self.cart
+        return alaki
+
+    def delete(self, product):
+        product_id = str(product)
+
+        if product_id in self.cart:
+           del self.cart[product_id]
+
+        self.session.modified = True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
