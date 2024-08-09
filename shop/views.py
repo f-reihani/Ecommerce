@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .forms import SignupForm
+from .forms import SignupForm, UpdateUserForm
 
 def category_summery(request):
     all_cat = Category.objects.all()
@@ -37,25 +37,39 @@ def logout_user(request):
     messages.success(request, "با موفقیت خارج شدید!")
     return redirect("home")
 
+
 def signup_user(request):
     form = SignupForm()
     if request.method == "POST":
        form = SignupForm(request.POST)
-       if form.is_valid:
+       if form.is_valid():
            form.save()
-           username = form.cleaned_data['user_name']
+           username = form.cleaned_data['username']
            password1 = form.cleaned_data['password1']
            user = authenticate(request, username=username, password=password1)
            login(request, user)
            messages.success(request, "اکانت شما ساخته شد!")
            return redirect("home")
        else:
-           messages.success(request, ('مشکلی در ثبت نام شما وجود دارد'))
+           print(form.errors)
+           messages.success(request, ('مشکلی در ثبت نام شما وجود دارد.'))
            return redirect("signup")
     else:
         return render(request, 'signup.html', {'form': form})
 
-
+def update_user(request):
+    if request.user.is_authenticated:
+        current_user = User.objects.get(id=request.user.id)
+        user_form = UpdateUserForm(request.POST or None, instance=current_user)
+        if user_form.is_valid():
+            user_form.save()
+            login(request, current_user)
+            messages.success(request, 'پروفایل شما ویرایش شد.')
+            return redirect('home')
+        return render(request, 'update_user.html',{'user_form':user_form})
+    else:
+        messages.success(request, 'ابتدا باید لاکین شوید.')
+        return redirect('home')
 def product(request, pk):
     product = Product.objects.get(id=pk)
     return render(request, 'product.html', {'product': product})
